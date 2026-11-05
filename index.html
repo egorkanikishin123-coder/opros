@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Помоги с выбором!</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #09090b;
+            color: #f4f4f5;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+            overflow: hidden;
+        }
+
+        /* Glassmorphism card effect */
+        .glass-card {
+            background: rgba(24, 24, 27, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Funny Animations */
+        @keyframes bounce-fun {
+            0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+            25% { transform: translateY(-15px) rotate(-8deg) scale(1.1); }
+            50% { transform: translateY(0) rotate(0deg) scale(0.95); }
+            75% { transform: translateY(-10px) rotate(8deg) scale(1.05); }
+        }
+
+        .animate-fun {
+            animation: bounce-fun 1.8s infinite ease-in-out;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.4)); }
+            50% { filter: drop-shadow(0 0 30px rgba(236, 72, 153, 0.7)); }
+        }
+
+        .glow-effect {
+            animation: pulse-glow 3s infinite ease-in-out;
+        }
+
+        /* Custom Slider Styling */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 28px;
+            width: 28px;
+            border-radius: 50%;
+            background: #ec4899;
+            box-shadow: 0 0 15px #ec4899;
+            cursor: pointer;
+            margin-top: -10px;
+            transition: transform 0.1s;
+        }
+        input[type=range]::-webkit-slider-thumb:active {
+            transform: scale(1.3);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 8px;
+            cursor: pointer;
+            background: #27272a;
+            border-radius: 9999px;
+        }
+
+        /* Fade step transition */
+        .step-transition {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .step-hidden {
+            opacity: 0;
+            transform: scale(0.92) translateY(20px);
+            pointer-events: none;
+            position: absolute;
+            width: 100%;
+        }
+        .step-active {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: auto;
+            position: relative;
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="h-screen w-screen flex flex-col justify-between items-center relative p-4">
+
+    <!-- Top Bar / Admin Telegram Config Modal Trigger -->
+    <header class="w-full max-w-md flex justify-between items-center pt-2 px-2 z-50">
+        <div class="flex items-center space-x-2">
+            <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span class="text-xs text-zinc-400 font-semibold tracking-wider uppercase">Интерактив</span>
+        </div>
+        <button id="configBtn" class="text-zinc-500 hover:text-zinc-300 transition-colors p-2" title="Настройки Telegram Бота">
+            <i class="fa-solid fa-gear text-lg"></i>
+        </button>
+    </header>
+
+    <!-- Main Container -->
+    <main class="w-full max-w-md my-auto relative flex items-center justify-center">
+
+        <!-- STEP 1: WELCOME SCREEN -->
+        <div id="step1" class="step-transition step-active flex flex-col items-center text-center cursor-pointer">
+            <div class="glass-card rounded-3xl p-8 w-full flex flex-col items-center">
+                <!-- Funny SVG Animation -->
+                <div class="w-32 h-32 mb-6 animate-fun glow-effect flex items-center justify-center">
+                    <svg viewBox="0 0 100 100" class="w-full h-full text-purple-500 fill-current">
+                        <circle cx="50" cy="50" r="45" fill="#1e1b4b" stroke="#8b5cf6" stroke-width="4"/>
+                        <circle cx="35" cy="40" r="8" fill="#ffffff"/>
+                        <circle cx="65" cy="40" r="8" fill="#ffffff"/>
+                        <circle cx="37" cy="40" r="4" fill="#000000"/>
+                        <circle cx="67" cy="40" r="4" fill="#000000"/>
+                        <!-- Tongue / Mouth -->
+                        <path d="M 30 60 Q 50 85 70 60 Z" fill="#ec4899"/>
+                        <path d="M 40 65 Q 50 78 60 65 Z" fill="#f43f5e"/>
+                    </svg>
+                </div>
+                
+                <h1 class="text-2xl font-black mb-4 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">
+                    друг помоги мне с выбором
+                </h1>
+                
+                <div class="mt-8 flex items-center space-x-2 text-zinc-400 text-sm animate-bounce">
+                    <i class="fa-solid fa-hand-pointer text-pink-500"></i>
+                    <span>Нажми в любое место, чтобы продолжить</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 2: RATING SCREEN (BOOTS) -->
+        <div id="step2" class="step-transition step-hidden flex flex-col items-center">
+            <div class="glass-card rounded-3xl p-6 w-full flex flex-col items-center">
+                
+                <!-- Boots Image Container -->
+                <div class="w-full h-64 rounded-2xl overflow-hidden mb-5 border border-zinc-700/50 relative shadow-2xl">
+                    <img 
+                        src="photo_2026-11-05_14-12-18.jpg" 
+                        id="bootsImg"
+                        alt="Ботинки" 
+                        class="w-full h-full object-cover"
+                        onerror="this.src='https://placehold.co/600x600/18181b/ffffff?text=Rick+Owens+Boots'"
+                    />
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                    <span class="absolute bottom-3 left-3 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold text-zinc-300 border border-white/10">
+                        🔥 Эксклюзивный шмот
+                    </span>
+                </div>
+
+                <label class="text-lg font-bold mb-2 text-zinc-100 text-center">
+                    на сколько они хороши?
+                </label>
+
+                <!-- Rating Value Display -->
+                <div class="text-4xl font-black my-2 text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500">
+                    <span id="ratingVal">5</span><span class="text-xl text-zinc-500">/10</span>
+                </div>
+
+                <!-- Custom Slider -->
+                <div class="w-full px-2 my-4">
+                    <input type="range" id="ratingInput" min="0" max="10" value="5" class="w-full">
+                    <div class="flex justify-between text-xs text-zinc-500 font-bold mt-1">
+                        <span>0 (Ужас)</span>
+                        <span>5 (Норм)</span>
+                        <span>10 (Идеал)</span>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button id="sendRatingBtn" class="mt-4 w-full py-4 rounded-xl font-extrabold text-white bg-gradient-to-r from-purple-600 via-pink-600 to-red-500 hover:opacity-95 active:scale-95 transition-all shadow-lg shadow-pink-500/25 flex justify-center items-center space-x-2">
+                    <span>Отправить оценку</span>
+                    <i class="fa-solid fa-paper-plane text-sm"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- STEP 3: AFTER RATING -->
+        <div id="step3" class="step-transition step-hidden flex flex-col items-center text-center cursor-pointer">
+            <div class="glass-card rounded-3xl p-8 w-full flex flex-col items-center border-red-500/20">
+                <div class="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center text-red-500 text-3xl mb-4">
+                    <i class="fa-solid fa-heart-crack"></i>
+                </div>
+                <h2 class="text-xl font-extrabold text-zinc-100 mb-2">
+                    Спасибо что помог!
+                </h2>
+                <p class="text-lg font-black text-red-400 mt-2">
+                    ...но вообще-то ты чмо.
+                </p>
+                <span class="text-xs text-zinc-500 mt-8">Нажми в любое место...</span>
+            </div>
+        </div>
+
+        <!-- STEP 4: SELF-DOUBT -->
+        <div id="step4" class="step-transition step-hidden flex flex-col items-center text-center cursor-pointer">
+            <div class="glass-card rounded-3xl p-8 w-full flex flex-col items-center border-purple-500/20">
+                <div class="w-20 h-20 bg-purple-500/10 rounded-full flex items-center justify-center text-purple-400 text-3xl mb-4">
+                    <i class="fa-solid fa-face-rolling-eyes"></i>
+                </div>
+                <p class="text-xl font-extrabold leading-relaxed text-purple-200">
+                    Где я тупое чмо, зависим от мнения других и у меня нет своего выбора
+                </p>
+                <span class="text-xs text-zinc-500 mt-8">Нажми ещё раз...</span>
+            </div>
+        </div>
+
+        <!-- STEP 5: REPEAT CHMO -->
+        <div id="step5" class="step-transition step-hidden flex flex-col items-center text-center cursor-pointer">
+            <div class="glass-card rounded-3xl p-10 w-full flex flex-col items-center border-pink-500/30">
+                <h1 class="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-pink-500 tracking-wider uppercase animate-pulse">
+                    чмо
+                </h1>
+                <span class="text-xs text-zinc-500 mt-10">Жми дальше...</span>
+            </div>
+        </div>
+
+        <!-- STEP 6: FINAL "ТЫ" -->
+        <div id="step6" class="step-transition step-hidden flex flex-col items-center text-center">
+            <div class="glass-card rounded-3xl p-10 w-full flex flex-col items-center border-emerald-500/30">
+                <div class="w-24 h-24 bg-gradient-to-tr from-emerald-500 to-teal-400 rounded-full flex items-center justify-center text-black text-4xl font-black mb-6 shadow-xl shadow-emerald-500/20">
+                    👉
+                </div>
+                <h1 class="text-7xl font-black text-white tracking-widest uppercase">
+                    ТЫ
+                </h1>
+                <p class="text-xs text-zinc-400 mt-6">Конец игры 🖤</p>
+                <button onclick="location.reload()" class="mt-6 px-6 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs rounded-full font-bold transition-all">
+                    Пройти снова
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full text-center py-4 text-xs text-zinc-600">
+        Prank App &bull; Telegram Mobile Friendly
+    </footer>
+
+    <!-- TELEGRAM CONFIG MODAL (ADMIN TOOL) -->
+    <div id="configModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-card rounded-3xl p-6 w-full max-w-sm border border-zinc-700">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-lg text-white">Настройки Telegram</h3>
+                <button id="closeConfigBtn" class="text-zinc-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p class="text-xs text-zinc-400 mb-4">
+                Укажите Bot Token и Chat ID, чтобы получат оценки друга прямо в личные сообщения Telegram!
+            </p>
+            <div class="space-y-3">
+                <div>
+                    <label class="text-xs text-zinc-300 block mb-1">Bot Token (из @BotFather)</label>
+                    <input type="text" id="tgTokenInput" placeholder="123456789:ABCdefGhI..." class="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-pink-500">
+                </div>
+                <div>
+                    <label class="text-xs text-zinc-300 block mb-1">Ваш Chat ID (из @userinfobot)</label>
+                    <input type="text" id="tgChatIdInput" placeholder="987654321" class="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-pink-500">
+                </div>
+            </div>
+            <button id="saveConfigBtn" class="w-full mt-5 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-sm transition-all">
+                Сохранить
+            </button>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 bg-zinc-800 text-white border border-zinc-700 px-4 py-2 rounded-full text-xs font-semibold shadow-2xl opacity-0 transition-all pointer-events-none z-50">
+        Настройки сохранены!
+    </div>
+
+    <script>
+        // State
+        let currentStep = 1;
+        let userRating = 5;
+
+        // Step Elements
+        const steps = {
+            1: document.getElementById('step1'),
+            2: document.getElementById('step2'),
+            3: document.getElementById('step3'),
+            4: document.getElementById('step4'),
+            5: document.getElementById('step5'),
+            6: document.getElementById('step6'),
+        };
+
+        // Custom Image Load Logic (Use uploaded image placeholder)
+        const bootsImg = document.getElementById('bootsImg');
+        // SVG Data URI fallback for Rick Owens style boots icon if image fails
+        const bootSvgFallback = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 24 24" fill="none" stroke="%23ec4899" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16v-8a2 2 0 0 1 2 -2h4l4 12h6a2 2 0 0 1 2 2v2h-18v-4z"/><path d="M14 6l2 4"/><path d="M10 6l2 4"/></svg>`;
+
+        // UI Controls
+        const ratingInput = document.getElementById('ratingInput');
+        const ratingVal = document.getElementById('ratingVal');
+        const sendRatingBtn = document.getElementById('sendRatingBtn');
+
+        // Config Modal Controls
+        const configBtn = document.getElementById('configBtn');
+        const configModal = document.getElementById('configModal');
+        const closeConfigBtn = document.getElementById('closeConfigBtn');
+        const saveConfigBtn = document.getElementById('saveConfigBtn');
+        const tgTokenInput = document.getElementById('tgTokenInput');
+        const tgChatIdInput = document.getElementById('tgChatIdInput');
+        const toast = document.getElementById('toast');
+
+        // Load saved Telegram settings
+        tgTokenInput.value = localStorage.getItem('prank_tg_token') || '';
+        tgChatIdInput.value = localStorage.getItem('prank_tg_chat_id') || '';
+
+        // Update Rating Text
+        ratingInput.addEventListener('input', (e) => {
+            userRating = e.target.value;
+            ratingVal.textContent = userRating;
+        });
+
+        // Navigation logic
+        function goToStep(nextStep) {
+            if (steps[currentStep]) {
+                steps[currentStep].classList.remove('step-active');
+                steps[currentStep].classList.add('step-hidden');
+            }
+            
+            setTimeout(() => {
+                currentStep = nextStep;
+                if (steps[currentStep]) {
+                    steps[currentStep].classList.remove('step-hidden');
+                    steps[currentStep].classList.add('step-active');
+                }
+            }, 200);
+        }
+
+        // Click anywhere handlers for specific steps
+        document.body.addEventListener('click', (e) => {
+            // Ignore clicks on inputs, buttons, or modals
+            if (e.target.closest('button') || e.target.closest('input') || e.target.closest('#configModal')) {
+                return;
+            }
+
+            if (currentStep === 1) {
+                goToStep(2);
+            } else if (currentStep === 3) {
+                goToStep(4);
+            } else if (currentStep === 4) {
+                goToStep(5);
+            } else if (currentStep === 5) {
+                goToStep(6);
+            }
+        });
+
+        // Submit Rating Action
+        sendRatingBtn.addEventListener('click', () => {
+            // Save locally
+            localStorage.setItem('user_submitted_rating', userRating);
+
+            // Try sending to Telegram Bot if configured
+            const botToken = localStorage.getItem('prank_tg_token');
+            const chatId = localStorage.getItem('prank_tg_chat_id');
+
+            if (botToken && chatId) {
+                const message = encodeURIComponent(`🔥 Друг оценил твои ботинки на ${userRating}/10!`);
+                fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${message}`)
+                    .then(res => console.log('TG Response Sent'))
+                    .catch(err => console.error('TG Error:', err));
+            } else {
+                console.log(`[Local Log] Оценка сохранена: ${userRating}/10`);
+            }
+
+            goToStep(3);
+        });
+
+        // Modal Logic
+        configBtn.addEventListener('click', () => configModal.classList.remove('hidden'));
+        closeConfigBtn.addEventListener('click', () => configModal.classList.add('hidden'));
+        
+        saveConfigBtn.addEventListener('click', () => {
+            localStorage.setItem('prank_tg_token', tgTokenInput.value.trim());
+            localStorage.setItem('prank_tg_chat_id', tgChatIdInput.value.trim());
+            configModal.classList.add('hidden');
+            showToast('Настройки Telegram сохранены!');
+        });
+
+        function showToast(msg) {
+            toast.textContent = msg;
+            toast.classList.remove('opacity-0');
+            setTimeout(() => toast.classList.add('opacity-0'), 2500);
+        }
+    </script>
+</body>
+</html>
